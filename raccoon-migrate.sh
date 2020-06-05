@@ -16,6 +16,9 @@ fi
 MODE="$1"
 PROJECTS="$2"
 WHAT="$3"
+# The credentials of the user that **Magento** uses to access the DB
+PROJECT_DB_USER="${PROJECT_DB_USER:-vagrant}"
+PROJECT_DB_PASS="${PROJECT_DB_PASS:-vagrant}"
 
 LOCAL_ROOT="archive"
 REMOTE_ROOT="${REMOTE_DIR:-/var/www/magento}"
@@ -42,7 +45,7 @@ project-export-all() {
 
 project-import-db() {
   linfo "Importing project $(lq $PROJECT) db"
-  magento-db-import "$PROJECT" "$PROJECT" "vagrant" "$LOCAL_PROJECT_DIR/db.sql.gz"
+  magento-db-import "$PROJECT" "$PROJECT_DB_USER" "$PROJECT_DB_PASS" "$LOCAL_PROJECT_DIR/db.sql.gz"
 }
 
 project-import-code() {
