@@ -1,0 +1,15 @@
+os: linux
+language: generic
+
+script: >
+  .ci/bundle.sh
+
+deploy:
+  - provider: releases
+    token: $GITHUB_OAUTH_TOKEN
+    file_glob: true
+    file: "bin/*.sh"
+    skip_cleanup: true
+    cleanup: false
+    on:
+      tags: true
