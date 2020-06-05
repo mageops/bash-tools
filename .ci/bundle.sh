@@ -13,7 +13,7 @@ bundle() {
   for LIB in $LIBS ; do 
     LIBRE="$(echo $LIB | sed 's~\([/.]\)~\\\1~g')"
 
-    gsed -i -e '/\. '"$LIBRE"'/{
+    sed -i -e '/\. '"$LIBRE"'/{
       s~\. '"$LIBRE"'~###### Bundled lib -> '"$LIB"' ######~g
       r '"$LIB"'
     }' "$ENTRYPOINT"
