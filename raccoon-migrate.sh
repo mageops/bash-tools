@@ -28,12 +28,12 @@ project-export-db() {
 
 project-export-code() {
   linfo "Exporting project $(lq $PROJECT) code"
-  magento-code-export "$REMOTE_PROJECT_DIR" "$LOCAL_PROJECT_DIR/code.sql.gz"
+  magento-code-export "$REMOTE_PROJECT_DIR" "$LOCAL_PROJECT_DIR/code.tar.gz"
 }
 
 project-export-media() {
   linfo "Exporting project $(lq $PROJECT) media"
-  magento-media-export "$REMOTE_PROJECT_DIR" "$LOCAL_PROJECT_DIR/media.sql.gz"
+  magento-media-export "$REMOTE_PROJECT_DIR" "$LOCAL_PROJECT_DIR/media.tar.gz"
 }
 
 project-export-all() {
