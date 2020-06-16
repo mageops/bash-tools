@@ -2,13 +2,13 @@ os: linux
 language: generic
 
 script: >
-  .ci/bundle.sh
+  .ci/bundle.bash
 
 deploy:
   - provider: releases
     token: $GITHUB_OAUTH_TOKEN
     file_glob: true
-    file: "bin/*.sh"
+    file: "bin/*.bash"
     skip_cleanup: true
     cleanup: false
     on:
