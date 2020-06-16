@@ -10,6 +10,8 @@ OUT="bin"
 
 bundle-library() {
   cat > "$OUT/lib.bundle.bash" <<ENDBANNER
+#!/usr/bin/env bash
+
 #######
 # MageOps Bash Tools Library Bundle
 # On: $(date)
@@ -30,6 +32,8 @@ bundle-script() {
   OUTFILE="$OUT/$NAME.bundle.bash"
 
   cat > "$OUTFILE" <<ENDBANNER
+#!/usr/bin/env bash
+
 #######
 # Bundled Bash Tools Script: $(realpath "$1")
 # On: $(date)
