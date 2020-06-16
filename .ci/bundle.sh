@@ -20,14 +20,14 @@ bundle() {
   done
 }
 
-lstep "Clean $(lq $BUILD_DIR)" \
+ui::step "Clean $(ui::q $BUILD_DIR)" \
   rm -rf "$BUILD_DIR" '&&' mkdir -p "$BUILD_DIR"
 
 for ENTRYPOINT in $ENTRYPOINTS ; do
-  lstep "Copy $(lq $ENTRYPOINT) to $(lq $BUILD_DIR)" \
+  ui::step "Copy $(ui::q $ENTRYPOINT) to $(ui::q $BUILD_DIR)" \
     cp -f "$ENTRYPOINT" "$BUILD_DIR"
 
-  lstep "Bundle $(lq $BUILD_DIR/$ENTRYPOINT) with libs" \
+  ui::step "Bundle $(ui::q $BUILD_DIR/$ENTRYPOINT) with libs" \
     bundle "$BUILD_DIR/$ENTRYPOINT"
 done
 
