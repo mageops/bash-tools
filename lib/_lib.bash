@@ -56,7 +56,7 @@ lib::cleanup() {
 }
 
 lib::cleanup::hook() {
-  export MAGEOPS_CLEANUP_HOOKS+=("${*}")
+  MAGEOPS_CLEANUP_HOOKS+=("${*}")
 }
 
 lib::import() {
