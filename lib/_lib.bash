@@ -2,21 +2,61 @@
 
 set -euo pipefail
 
-if [ -z "${MAGEOPS_BASH_LIB_DIR:-}" ] ; then 
-  if [ -f "$(dirname "${BASH_SOURCE[0]}")/lib/_lib.bash" ] ; then 
-    export MAGEOPS_BASH_LIB_DIR="$(dirname "${BASH_SOURCE[0]}")/lib"
-  elif [ -f "$(pwd)/lib/_lib.bash" ] ; then
-    export MAGEOPS_BASH_LIB_DIR="$(pwd)/lib"
-  else
-    export MAGEOPS_BASH_LIB_DIR=false
-  fi
-fi
-
 export MAGEOPS_LEAVING=""
 export MAGEOPS_DEBUG="${MAGEOPS_DEBUG:-false}"
 export MAGEOPS_CLEANUP_HOOKS=()
 
-trap 'EXIT_CODE=$?; lib::trap $EXIT_CODE; exit $EXIT_CODE' EXIT HUP QUIT INT
+trap 'EXIT_CODE=$? ; lib::trap $EXIT_CODE || true ; exit $EXIT_CODE' EXIT HUP QUIT INT
+
+lib::join() {
+  local SEP="${1:-:}"; shift
+  printf "%s:" "$@" | sed -E 's~^['"$SEP"' ]*|['"$SEP"' ] *$~~g'
+}
+
+lib::split() {
+  local SEP="${1:-:}"; shift
+  while IFS="$SEP" read -ra ITEMS; do
+      for ITEM in "${ITEMS[@]}"; do
+          echo "$ITEM"
+      done
+  done <<< "$*"
+}
+
+lib::path::get() {
+  local PWD="$(pwd)"
+  local SWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+  local MAGEOPS_BASH_LIB_SEARCH_PATHS=("${MAGEOPS_BASH_LIB_DIR:-}")
+  local MAGEOPS_BASH_LIB_SEARCH_PATHS+=("$@")
+  local MAGEOPS_BASH_LIB_SEARCH_PATHS+=(
+    "$PWD"
+    "$PWD/lib"
+    "$SWD"
+    "$SWD/lib"
+    "$HOME/.local/share/mageops/bash/lib"
+    "$HOME/.mageops/bash/lib"
+    "/usr/local/share/mageops/bash/lib"
+    "/opt/mageops/bash/lib"
+  )
+
+  lib::join ":" "${MAGEOPS_BASH_LIB_SEARCH_PATHS[@]}"
+}
+
+lib::path::locate() {
+  local FILE_NAME="${1:-_lib.bash}"
+  local SEARCH_PATH="${2:-${MAGEOPS_BASH_LIB_SEARCH_PATH:-}}"
+
+  while read -ra TRY_PATH ; do
+    if [ -z "$TRY_PATH" ] ; then
+      continue
+    elif [ -f "$TRY_PATH/$FILE_NAME" ] ; then
+      echo "$TRY_PATH"
+      return
+    fi
+  done <<< "$(lib::split ':' "$SEARCH_PATH")"  
+}
+
+export MAGEOPS_BASH_LIB_SEARCH_PATH="${MAGEOPS_BASH_LIB_SEARCH_PATH:-$(lib::path::get)}"
+export MAGEOPS_BASH_LIB_DIR="${MAGEOPS_BASH_LIB_DIR:-$(lib::path::locate)}"
 
 lib::leave() {
   local LEAVE_CODE="${1:-}"; shift
@@ -66,7 +106,7 @@ lib::import() {
     if declare -F "$MODULE::__module__" ; then
       "$MODULE::__module__"
     else
-      if [ "${MAGEOPS_BASH_LIB_DIR:-}" == "false" ]; then
+      if [ -z "${MAGEOPS_BASH_LIB_DIR:-}" ]; then
         echo "Cannot locate module $MODULE: environment variable MAGEOPS_BASH_LIB_DIR is not set" >&2
         exit 99
       fi

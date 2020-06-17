@@ -52,14 +52,14 @@ ENDBANNER
   echo -e "\n\n####### END Script: $1#######\n" >> "$OUTFILE"
 }
 
-ui::step "Clean $(ui::q $OUT)" \
+ui::step "Clean $(ui::em $OUT)" \
   rm -rf "$OUT" '&&' mkdir -p "$OUT"
 
-ui::step "Bundle library files to $(ui::q $OUT/lib.bundle.bash)" \
+ui::step "Bundle library files to $(ui::em $OUT/lib.bundle.bash)" \
   bundle-library
 
  find . -maxdepth 1 -type f -iname '*.bash' | while read SCRIPT ; do
-  ui::step "Bundle $(ui::q $SCRIPT) with lib" \
+  ui::step "Bundle $(ui::em $SCRIPT) with lib" \
     bundle-script "$SCRIPT" "$OUT/$SCRIPT"
 done
 

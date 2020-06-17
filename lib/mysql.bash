@@ -42,7 +42,7 @@ mysql::__module__() {
     local MYSQL_DB="$1"; shift
     local MYSQL_QUERY="$1"; shift
 
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) query execute <- $(ui::q $MYSQL_QUERY)" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) query execute <- $(ui::em $MYSQL_QUERY)" \
       `remote::cmd \
         mysql \
           $(mysql::args) \
@@ -54,7 +54,7 @@ mysql::__module__() {
     local MYSQL_DB="$1"; shift
     local MYSQL_TABLE_PATTERN="$1"; shift
 
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) <- list tables like $(ui::q $MYSQL_TABLE_PATTERN)" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) <- list tables like $(ui::em $MYSQL_TABLE_PATTERN)" \
       `remote::cmd \
         mysql \
           $(mysql::args) \
@@ -66,7 +66,7 @@ mysql::__module__() {
     local MYSQL_DB="$1"; shift
     local MYSQL_DB_DUMP_FILE="$1"; shift
     
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) dump -> $(ui::q $MYSQL_DB_DUMP_FILE)" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) dump -> $(ui::em $MYSQL_DB_DUMP_FILE)" \
       `remote::cmd \
         mysqldump \
           $(mysql::args) \
@@ -75,14 +75,14 @@ mysql::__module__() {
       '|' gzip \
       '>' "$MYSQL_DB_DUMP_FILE"
 
-    ui::done "<MySQL> Database $(ui::q $MYSQL_DB) dump -> saved $(ui::q $(ui::fsize "$MYSQL_DB_DUMP_FILE")) file"
+    ui::done "<MySQL> Database $(ui::em $MYSQL_DB) dump -> saved $(ui::em $(ui::fsize "$MYSQL_DB_DUMP_FILE")) file"
   }
 
   mysql::create-user() {
     local MYSQL_DB_USER="$1"; shift
     local MYSQL_DB_PASS="$1"; shift
 
-    ui::step "<MySQL> User $(ui::q $MYSQL_DB_USER) <-> create if not exists" \
+    ui::step "<MySQL> User $(ui::em $MYSQL_DB_USER) <-> create if not exists" \
       `remote::cmd \
         mysql \
           $(mysql::args) \
@@ -97,7 +97,7 @@ mysql::__module__() {
 
     mysql::create-user "$MYSQL_DB_USER" "$MYSQL_DB_PASS"
 
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) <- grant all privileges to user $(ui::q $MYSQL_DB_USER)" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) <- grant all privileges to user $(ui::em $MYSQL_DB_USER)" \
       `remote::cmd \
         mysql \
           $(mysql::args) \
@@ -114,13 +114,13 @@ mysql::__module__() {
     local MYSQL_DB="$1"; shift
     local MYSQL_DB_DUMP_FILE="$1"; shift
 
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) load <- $(ui::q $MYSQL_DB_DUMP_FILE)" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) load <- $(ui::em $MYSQL_DB_DUMP_FILE)" \
       gzcat "$MYSQL_DB_DUMP_FILE" '|' `remote::cmd \
         mysql --batch \
           $(mysql::args) \
           "$MYSQL_DB"`
 
-    ui::done "<MySQL> Database $(ui::q $MYSQL_DB) load <- loaded $(ui::q $(ui::fsize "$MYSQL_DB_DUMP_FILE")) file"
+    ui::done "<MySQL> Database $(ui::em $MYSQL_DB) load <- loaded $(ui::em $(ui::fsize "$MYSQL_DB_DUMP_FILE")) file"
   }
 
   mysql::import-db-dump() {
@@ -129,13 +129,13 @@ mysql::__module__() {
     local MYSQL_DB_PASS="$1"; shift
     local MYSQL_DB_DUMP_FILE="$1"; shift
 
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) <-> drop if exists" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) <-> drop if exists" \
       `remote::cmd \
         mysql \
           $(mysql::args) \
           -sN -e "DROP DATABASE IF EXISTS ${MYSQL_DB}"`
 
-    ui::step "<MySQL> Database $(ui::q $MYSQL_DB) <-> create" \
+    ui::step "<MySQL> Database $(ui::em $MYSQL_DB) <-> create" \
       `remote::cmd \
         mysql \
           $(mysql::args) \

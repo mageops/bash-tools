@@ -1,4 +1,6 @@
 ui::color::__module__() {
+  lib::import ui::core
+
   ui::c() {
     declare -A local _CODES=(
       [inf]="\033[0;34m"

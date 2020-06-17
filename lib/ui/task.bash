@@ -1,10 +1,12 @@
 ui::task::__module__() {
+    lib::import ui::core
+    lib::import ui::color
+
     export MAGEOPS_UI_SPINJOBS=""
-    export MAGEOPS_DEBUG="${MAGEOPS_DEBUG:-false}"
 
-    lib::cleanup::hook ui::cleanup
+    lib::cleanup::hook ui::task::cleanup
 
-    ui::cleanup() {
+    ui::task::cleanup() {
         tput cnorm
         kill $MAGEOPS_UI_SPINJOBS &>/dev/null || true
     }
@@ -18,12 +20,9 @@ ui::task::__module__() {
     ui::done()      { echo -e  "[\e[1;32m DONE \e[0m] $@" ; }
     ui::debug()     { ! $MAGEOPS_DEBUG || echo -e  "[\e[2m DBUG \e[0m] $@" >&2 ; }
 
-    ui::q()         { echo -ne "\e[36m$@\e[0m" ; }
-    ui::overw()     { echo -ne "\e[0K\r" ; }
-    ui::cmd()       { ui::debugcmd "$@"; "$@"; }
-    ui::qcmd()      { while (( $# > 0 )) ; do echo -ne "'$1' "; shift; done; }
-    ui::debugcmd()  { ui::debug "Cmd: $(ui::q $(echo "$@"))" ; }
-    ui::fsize()     { ls -sh1 "$@" | cut -d' ' -f1; }
+    ui::cmd()         { ui::cmd::debug "$@"; "$@"; }
+    ui::cmd::quote()  { while (( $# > 0 )) ; do echo -ne "'$1' "; shift; done; }
+    ui::cmd::debug()  { ui::debug "Cmd: $(ui::em $(echo "$@"))" ; }
 
     ui::spin() {
         local DELAY=0.08s
@@ -43,6 +42,11 @@ ui::task::__module__() {
     }
 
     ui::begin() {
+        if ! $UI_TTY_HAS ; then
+            echo -e "[\e[1;36m  ->  \e[0m] $@"
+            return 0
+        fi
+
         echo -ne "[\e[1;36m------\e[0m] $@\r"
         tput civis
         ui::spin "$@" >&2 &
@@ -50,8 +54,9 @@ ui::task::__module__() {
     }
 
     ui::finish() {
+        $UI_TTY_HAS|| return 0
         [ -z "$MAGEOPS_UI_SPINJOBS" ] || kill $MAGEOPS_UI_SPINJOBS && export MAGEOPS_UI_SPINJOBS=""
-        ui::overw
+        ui::cr
         tput cnorm
     }
 
@@ -59,7 +64,7 @@ ui::task::__module__() {
     ui::step() {
         local LABEL="$1"; shift
 
-        ui::debugcmd "$@" >&2
+        ui::cmd::debug "$@" >&2
         ui::begin "$LABEL" >&2
 
         set +e
@@ -71,7 +76,7 @@ ui::task::__module__() {
         ui::finish "$LABEL" >&2
 
         if [ $RESULT -gt 0 ]  ; then
-            ui::fail "$LABEL \n\e[1;31m     <$RESULT> \e[0;31mFailed command:\e[0m $(ui::q $(echo "$@"))\n$(echo "$CMD_ERR" | sed -E 's/^/     \\e[1;31m<<<\\e[0;31m /g')\e[0m"
+            ui::fail "$LABEL \n\e[1;31m     <$RESULT> \e[0;31mFailed command:\e[0m $(ui::em $(echo "$@"))\n$(echo "$CMD_ERR" | sed -E 's/^/     \\e[1;31m<<<\\e[0;31m /g')\e[0m"
             return $RESULT
         else
             ui::ok "$LABEL" >&2

@@ -16,7 +16,7 @@ fs::__module__() {
       # Warning! This argument order is for GNU tar 1.26 (CentOS 7)
       # - different order of exclude arguments might be needed with
       # later versions!
-      ui::step "<Filesystem> Archive $(ui::q $FS_ROOT_DIR/$FS_SRC_DIR) -> $(ui::q $FS_ARCHIVE_PATH)" \
+      ui::step "<Filesystem> Archive $(ui::em $FS_ROOT_DIR/$FS_SRC_DIR) -> $(ui::em $FS_ARCHIVE_PATH)" \
         `remote::cmd \
           tar \
             -cz \
@@ -25,24 +25,24 @@ fs::__module__() {
               "$FS_SRC_DIR"` \
         '>' "$FS_ARCHIVE_PATH"
 
-      ui::done "<Filesystem> Archive $(ui::q $FS_ROOT_DIR/$FS_SRC_DIR) -> written $(ui::q $(ui::fsize "$FS_ARCHIVE_PATH")) file"
+      ui::done "<Filesystem> Archive $(ui::em $FS_ROOT_DIR/$FS_SRC_DIR) -> written $(ui::em $(ui::fsize "$FS_ARCHIVE_PATH")) file"
   }
 
   fs::unarchive() {
       local FS_ROOT_DIR="$1"; shift 
       local FS_ARCHIVE_PATH="$1"; shift
 
-      ui::step "<Filesystem> Ensure root $(ui::q $FS_ROOT_DIR) dir exists" \
+      ui::step "<Filesystem> Ensure root $(ui::em $FS_ROOT_DIR) dir exists" \
         `remote::cmd \
           mkdir -p "$FS_ROOT_DIR"`
 
-      ui::step "<Filesystem> Unarchive $(ui::q $FS_ARCHIVE_PATH) -> $(ui::q $FS_ROOT_DIR)" \
+      ui::step "<Filesystem> Unarchive $(ui::em $FS_ARCHIVE_PATH) -> $(ui::em $FS_ROOT_DIR)" \
         gzcat "$FS_ARCHIVE_PATH" \
         '|' `remote::cmd \
           tar \
             -x \
             -C "$FS_ROOT_DIR"`
 
-      ui::done "<Filesystem> Archive $(ui::q $FS_ARCHIVE_PATH) -> extracted $(ui::q $(ui::fsize "$FS_ARCHIVE_PATH")) file"
+      ui::done "<Filesystem> Archive $(ui::em $FS_ARCHIVE_PATH) -> extracted $(ui::em $(ui::fsize "$FS_ARCHIVE_PATH")) file"
   }
 }
