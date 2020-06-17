@@ -4,7 +4,7 @@ mageops::bootstrap::__module__()
   lib::import mageops::ansible
 
   mageops::bootstrap::project-vars-install() {
-      
+    true # Not implemented
   }
   
   mageops::bootstrap::install() {

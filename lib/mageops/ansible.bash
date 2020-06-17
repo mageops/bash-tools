@@ -4,12 +4,15 @@ mageops::ansible::__module__() {
   export ANSIBLE_FORCE_COLOR="yes"
 
   mageops::ansible::virtualenv::install() {
+    true # Not implemented
   }
 
   mageops::ansible::virtualenv::activate() {
+    true # Not implemented
   }
 
   mageops::ansible::virtualenv::update() {
+    true # Not implemented
   }
 
   mageops::ansible::playbook() {
