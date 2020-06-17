@@ -1,4 +1,4 @@
-/bin/
+/__bundle__/
 *tmp
 .tmp*
 *.gz

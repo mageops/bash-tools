@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -ex
+
+git-update() {
+    git fetch
+    git pull \
+        || ( git stash && git pull && git stash pop ) \
+        || git reset --hard "$(git rev-parse --abbrev-ref --symbolic-full-name @{u})"
+    git -c color.ui=always --no-pager log -1
+}
+
+MAGEOPS_ROOT="${MAGEOPS_ROOT:-/opt/mageops}"
+
+cd $MAGEOPS_ROOT/ansible/infrastructure && git-update
+cd $MAGEOPS_ROOT/ansible/infrastructure/vars/project && git-update
+
+source $MAGEOPS_ROOT/ansible/virtualenv/bin/activate
+
+pip install \
+    -r $MAGEOPS_ROOT/ansible/infrastructure/requirements-python.txt
+
+ansible-galaxy install \
+    -r $MAGEOPS_ROOT/ansible/infrastructure/requirements-galaxy.yml \
+    -p $MAGEOPS_ROOT/ansible/infrastructure/roles
+
+
+
+
+
+

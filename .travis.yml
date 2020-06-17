@@ -8,7 +8,7 @@ deploy:
   - provider: releases
     token: $GITHUB_OAUTH_TOKEN
     file_glob: true
-    file: "bin/*.bash"
+    file: "__bundle__/*.bash"
     skip_cleanup: true
     cleanup: false
     on:

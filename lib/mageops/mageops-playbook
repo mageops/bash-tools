@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+MAGEOPS_ROOT="${MAGEOPS_ROOT:-/opt/mageops}"
+
+. $MAGEOPS_ROOT/ansible/virtualenv/bin/activate
+

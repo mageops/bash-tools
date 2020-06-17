@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+MAGEOPS_ROOT="${MAGEOPS_ROOT:-/opt/mageops}"
+
+parse_vars() {
+    for var in "$@" ; do
+        echo "--extra-vars '$var'"
+    done
+}
+
+if [ $# -lt 1 ] ; then
+    echo "Usage: $0 cmd,cmd2,... extra_var=value extra_var2=value2 ..." >&2
+    exit 1
+fi
+
+CMD="$1"; shift
+
+$MAGEOPS_ROOT/bin/mageops-playbook \
+    raccoon.cmd \
+        --extra-vars "raccoon_cmd=$CMD" \
+            `parse_vars "$@"`

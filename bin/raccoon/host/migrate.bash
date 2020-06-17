@@ -4,7 +4,7 @@ set -e
 
 source "${MAGEOPS_BASH_LIB_DIR:-.}/lib/_lib.bash"
 
-lib::import raccoon::migrate
+lib::import raccoon::host
 
-raccoon::migrate::script "$@"
+raccoon::host::migrate::script "$@"
 

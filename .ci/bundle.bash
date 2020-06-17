@@ -6,7 +6,7 @@ lib::import ui
 
 
 LIB="$MAGEOPS_BASH_LIB_DIR"
-OUT="bin"
+OUT="__bundle__"
 
 bundle-library() {
   cat > "$OUT/lib.bundle.bash" <<ENDBANNER
@@ -28,8 +28,9 @@ ENDBANNER
 }
 
 bundle-script() {
+  SCRIPT="$1"
+  OUTFILE="$2"
   NAME="${SCRIPT%.bash}"
-  OUTFILE="$OUT/$NAME.bundle.bash"
 
   cat > "$OUTFILE" <<ENDBANNER
 #!/usr/bin/env bash
@@ -58,8 +59,11 @@ ui::step "Clean $(ui::em $OUT)" \
 ui::step "Bundle library files to $(ui::em $OUT/lib.bundle.bash)" \
   bundle-library
 
- find . -maxdepth 1 -type f -iname '*.bash' | while read SCRIPT ; do
+find bin -type f -iname '*.bash' | while read SCRIPT ; do
+  OUTFILE="$OUT/$(echo "$SCRIPT" | tr '/' '.')"
+  mkdir -p "$(dirname "$OUTFILE")"
+
   ui::step "Bundle $(ui::em $SCRIPT) with lib" \
-    bundle-script "$SCRIPT" "$OUT/$SCRIPT"
+    bundle-script "$SCRIPT" "$OUTFILE"
 done
 
