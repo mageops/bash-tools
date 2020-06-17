@@ -28,7 +28,7 @@ ENDBANNER
 
   find "$LIB/" -type f -iname '*.bash' | while read LIBMODULE ; do
     echo -e "\n\n####### BEGIN Library Module: $LIBMODULE #######\n" >> "$OUT/lib.bundle.bash"
-    cat "$LIBMODULE" >> "$OUT/lib.bundle.bash"
+    cat "$LIBMODULE" >> "$OUT/lib.bundle.bash" | head -1
     echo -e "\n####### END Library Module: $LIBMODULE #######" >> "$OUT/lib.bundle.bash"
   done
 }
