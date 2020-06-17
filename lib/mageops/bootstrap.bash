@@ -1,4 +1,4 @@
-mageops::bootstrap::__module__() 
+mageops::bootstrap::__module__() {
   lib::import ui
   lib::import mageops::core
   lib::import mageops::ansible

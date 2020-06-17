@@ -3,28 +3,3 @@
 set -e
 
 
-
-yum -y clean all || true
-dnf -y clean all || true
-
-systemctl stop php-fpm
-systemctl stop varnish
-systemctl stop elasticsearch
-systemctl stop nginx
-systemctl stop mysql
-systemctl stop redis
-systemctl stop redis-sessions
-systemctl stop elasticsearch
-
-rm -rvf \
-    /{root,home/magento}/{.cache/*,.opcache/*,.*history,.composer,.yarn/*,.npm/*} \
-    /var/lib/mysql/ib_logfile* \
-    /var/lib/mysql/ib_tmp* \
-    /var/lib/varnish/* \
-    /var/lib/redis/* \
-    /var/lib/redis-sessions/*
-
-echo '' | find /var/log -type f -exec tee {} \;
-echo '' | find /var/www/magento/ -mindepth 3 -type f -path '*/var/log/*' -exec tee {} \;
-
-

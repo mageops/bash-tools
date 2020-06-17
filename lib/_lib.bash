@@ -104,7 +104,7 @@ lib::import() {
   local MODULE="$1"
   
   if ! declare -F "$MODULE::__imported__" &>/dev/null ; then
-    if declare -F "$MODULE::__module__" ; then
+    if declare -F "$MODULE::__module__" &>/dev/null; then
       "$MODULE::__module__"
     else
       if [ -z "${MAGEOPS_BASH_LIB_DIR:-}" ]; then
