@@ -26,14 +26,15 @@ lib::path::get() {
   local PWD="$(pwd)"
   local SWD="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
   local MAGEOPS_BASH_LIB_SEARCH_PATHS=("${MAGEOPS_BASH_LIB_DIR:-}")
-  local MAGEOPS_BASH_LIB_SEARCH_PATHS+=("$@")
-  local MAGEOPS_BASH_LIB_SEARCH_PATHS+=(
+  MAGEOPS_BASH_LIB_SEARCH_PATHS+=("$@")
+  MAGEOPS_BASH_LIB_SEARCH_PATHS+=(
     "$PWD"
     "$PWD/lib"
     "$SWD"
     "$SWD/lib"
     "$HOME/.local/share/mageops/bash/lib"
     "$HOME/.mageops/bash/lib"
+    "/usr/share/mageops/bash/lib"
     "/usr/local/share/mageops/bash/lib"
     "/opt/mageops/bash/lib"
   )
