@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+#########
+#
+#    *** MageOps Bash Tools Library ***
+#
+#    Homepage: https://github.com/mageops/bash-tools
+#
+#    2020 (c) creativestyle Polska Sp. z o.o. <hello@creativestyle.pl>
+#    2020 (c) Filip Sobalski <pinkeen@gmail.com>
+# 
+#########
+
 set -euo pipefail
 
 export MAGEOPS_LEAVING=""
