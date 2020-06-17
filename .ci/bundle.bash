@@ -8,16 +8,22 @@ lib::import ui
 LIB="$MAGEOPS_BASH_LIB_DIR"
 OUT="__bundle__"
 
+
 bundle-library() {
   cat > "$OUT/lib.bundle.bash" <<ENDBANNER
-#!/usr/bin/env bash
-
-#######
-# MageOps Bash Tools Library Bundle
-# On: $(date)
-# By: $(whoami) @ $(hostname)
-# Machine: $(uname -a)
-#######
+#########
+#
+#    MageOps Bash Tools Library Bundle
+# 
+#    On: $(date)
+#    By: $(whoami) @ $(hostname)
+#    Machine: $(uname -a)
+#
+#    Recent repository activity:
+#
+$(git log --pretty=oneline --abbrev-commit --decorate=full -5 | sed 's/^/#        /g')
+#
+#########
 ENDBANNER
 
   find "$LIB/" -type f -iname '*.bash' | while read LIBMODULE ; do
@@ -35,16 +41,14 @@ bundle-script() {
   cat > "$OUTFILE" <<ENDBANNER
 #!/usr/bin/env bash
 
-#######
-# Bundled Bash Tools Script: $(realpath "$1")
-# On: $(date)
-# By: $(whoami) @ $(hostname)
-# Machine: $(uname -a)
-#######
-
+#########
+#
+#    [Script Bundle] Source file: $(realpath "$1")
+#
+#########
 ENDBANNER
 
-  cat "$OUT/lib.bundle.bash" >> "$OUTFILE"
+  cat "$OUT/lib.bundle.bash" | tail -n+2 >> "$OUTFILE"
 
 ENDBANNER
 
