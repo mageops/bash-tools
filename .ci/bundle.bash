@@ -10,7 +10,7 @@ OUT="__bundle__"
 
 
 bundle-library() {
-  cat > "$OUT/lib.bundle.bash" <<ENDBANNER
+  cat > "$OUT/lib._bundle_.bash" <<ENDBANNER
 #########
 #
 #    MageOps Bash Tools Library Bundle
@@ -27,16 +27,16 @@ $(git log --pretty=oneline --abbrev-commit --decorate=full -5 | sed 's/^/#      
 ENDBANNER
 
   find "$LIB/" -type f -iname '*.bash' | while read LIBMODULE ; do
-    echo -e "\n\n####### BEGIN Library Module: $LIBMODULE #######\n" >> "$OUT/lib.bundle.bash"
-    cat "$LIBMODULE" >> "$OUT/lib.bundle.bash" | head -1
-    echo -e "\n####### END Library Module: $LIBMODULE #######" >> "$OUT/lib.bundle.bash"
+    echo -e "\n\n####### BEGIN Library Module: $LIBMODULE #######\n" >> "$OUT/lib._bundle_.bash"
+    cat "$LIBMODULE" >> "$OUT/lib._bundle_.bash" | head -1
+    echo -e "\n####### END Library Module: $LIBMODULE #######" >> "$OUT/lib._bundle_.bash"
   done
 }
 
 bundle-script() {
   SCRIPT="$1"
   OUTFILE="$2"
-  NAME="${SCRIPT%.bash}"
+  OUTFILE="${OUTFILE%.bash}._bundle_.bash"
 
   cat > "$OUTFILE" <<ENDBANNER
 #!/usr/bin/env bash
@@ -48,7 +48,7 @@ bundle-script() {
 #########
 ENDBANNER
 
-  cat "$OUT/lib.bundle.bash" | tail -n+2 >> "$OUTFILE"
+  cat "$OUT/lib._bundle_.bash" | tail -n+2 >> "$OUTFILE"
 
 ENDBANNER
 
@@ -60,7 +60,7 @@ ENDBANNER
 ui::step "Clean $(ui::em $OUT)" \
   rm -rf "$OUT" '&&' mkdir -p "$OUT"
 
-ui::step "Bundle library files to $(ui::em $OUT/lib.bundle.bash)" \
+ui::step "Bundle library files to $(ui::em $OUT/lib._bundle_.bash)" \
   bundle-library
 
 find bin -type f -iname '*.bash' | while read SCRIPT ; do
